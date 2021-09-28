@@ -3,25 +3,22 @@ import people from "./data";
 import { FaChevronLeft, FaChevronRight, FaQuoteRight } from "react-icons/fa";
 
 const Review = () => {
-  const [num, setNum] = useState(0);
-  console.log("🚀TCL: ~ file: Review.js ~ line 8 ~ Review ~ num", num);
-  const [showPerson, setShowPerson] = useState(people[0]);
-  const { id, name, job, text, image } = showPerson;
+  const [index, setIndex] = useState(0);
+  const { id, name, job, text, image } = people[index];
+  const checkNumber = (number) =>
+    number > people.length - 1 ? 0 : number < 0 ? people.length - 1 : number;
   const handlePrevPersion = () => {
-    setNum((prev) => {
+    setIndex((prev) => {
       let newNum = prev - 1;
-      newNum < 0 ? setNum(people.length - 1) : setNum(newNum);
+      return checkNumber(newNum);
     });
   };
   const handleNextPersion = () => {
-    setNum((prev) => {
+    setIndex((prev) => {
       let newNum = prev + 1;
-      newNum > people.length - 1 ? setNum(0) : setNum(newNum);
+      return checkNumber(newNum);
     });
   };
-  useEffect(() => {
-    setShowPerson(people[num]);
-  }, [num]);
   return (
     <section className="container">
       <div className="title">

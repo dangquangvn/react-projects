@@ -11,7 +11,7 @@ function App() {
         <section>
           {faqData &&
             faqData.map(({ id, title, info }) => (
-              <Question key={id} title={title} info={info} />
+              <SingleQuestion key={id} title={title} info={info} />
             ))}
         </section>
       </div>

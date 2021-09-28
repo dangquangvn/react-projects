@@ -10,7 +10,7 @@ const Question = ({ title, info }) => {
           {isVisible ? <AiOutlineMinus /> : <AiOutlinePlus />}
         </button>
       </header>
-      <p className={`info ${isVisible ? "active" : ""}`}>{info}</p>
+      {isVisible && <p>{info}</p>}
     </article>
   );
 };

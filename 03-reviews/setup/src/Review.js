@@ -19,6 +19,20 @@ const Review = () => {
       return checkNumber(newNum);
     });
   };
+  const randomPerson = () => {
+    let max = people.length;
+    let min = 0;
+    let randomNum = Math.max(Math.floor(Math.random() * max), min);
+    if (randomNum === index) {
+      randomNum = index + 1;
+    }
+    console.log(
+      "🚀TCL: ~ file: Review.js ~ line 26 ~ randomPerson ~ randomNum",
+      randomNum
+    );
+
+    setIndex(randomNum);
+  };
   return (
     <section className="container">
       <div className="title">
@@ -40,6 +54,9 @@ const Review = () => {
             <FaChevronRight />
           </button>
         </div>
+        <button className="random-btn" onClick={randomPerson}>
+          Suprise Me
+        </button>
       </article>
     </section>
   );

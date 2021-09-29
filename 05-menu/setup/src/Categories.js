@@ -1,11 +1,6 @@
 import React, { useState } from "react";
 
-const Categories = ({ items, setSelected }) => {
-  const uniqueItems = [...new Set(items.map((item) => item.category))];
-  console.log(
-    "🚀TCL: ~ file: Categories.js ~ line 5 ~ Categories ~ uniqueItems",
-    uniqueItems
-  );
+const Categories = ({ items, categories, filterItems }) => {
   return (
     <section className="menu section">
       <div className="title">
@@ -13,20 +8,16 @@ const Categories = ({ items, setSelected }) => {
         <div className="underline"></div>
       </div>
       <div className="btn-container">
-        <button type="button" className="filter-btn">
-          All
-        </button>
-        {uniqueItems &&
-          uniqueItems.map((category) => (
-            <button
-              type="button"
-              className="filter-btn"
-              key={category}
-              onClick={() => setSelected(category)}
-            >
-              {category}
-            </button>
-          ))}
+        {categories.map((category) => (
+          <button
+            type="button"
+            className="filter-btn"
+            key={category}
+            onClick={() => filterItems(category)}
+          >
+            {category}
+          </button>
+        ))}
       </div>
     </section>
   );

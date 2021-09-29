@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 
-const Categories = ({ items }) => {
+const Categories = ({ items, setSelected }) => {
   const uniqueItems = [...new Set(items.map((item) => item.category))];
   console.log(
     "🚀TCL: ~ file: Categories.js ~ line 5 ~ Categories ~ uniqueItems",
@@ -18,7 +18,12 @@ const Categories = ({ items }) => {
         </button>
         {uniqueItems &&
           uniqueItems.map((category) => (
-            <button type="button" className="filter-btn" key={category}>
+            <button
+              type="button"
+              className="filter-btn"
+              key={category}
+              onClick={() => setSelected(category)}
+            >
               {category}
             </button>
           ))}

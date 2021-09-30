@@ -32,6 +32,18 @@ function App() {
         return "nextSlide";
     }
   };
+
+  // useEffect
+  useEffect(() => {
+    let slider = setInterval(() => {
+      setValue((prev) => checkNumber(prev + 1));
+      console.log(value);
+    }, 5000);
+    return () => {
+      clearInterval(slider);
+    };
+  }, [value]);
+
   return (
     <section className="section">
       <div className="title">

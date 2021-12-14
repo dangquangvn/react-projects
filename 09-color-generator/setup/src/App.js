@@ -6,6 +6,8 @@ import { useEffect } from "react";
 
 function App() {
   const [color, setColor] = useState("#f15025");
+  const [error, setError] = useState(false);
+  // list
   const [colorArray, setColorArray] = useState([]);
 
   // render first time get in
@@ -23,13 +25,18 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(color);
-    if (!color) return;
-    const renderColor = new Values(color);
-    setColorArray(renderColor.all(10));
-    console.log(
-      "🚀TCL: ~ file: App.js ~ line 9 ~ App ~ colorArray",
-      colorArray
-    );
+    try {
+      if (!color) return;
+      const renderColor = new Values(color);
+      setColorArray(renderColor.all(10));
+      console.log(
+        "🚀TCL: ~ file: App.js ~ line 9 ~ App ~ colorArray",
+        colorArray
+      );
+    } catch (error) {
+      setError(true);
+      console.log(error);
+    }
   };
   return (
     <>
@@ -40,7 +47,7 @@ function App() {
             type='text'
             name='color'
             id='color'
-            className='null'
+            className={`${error ? "error" : null}`}
             placeholder='#f15025'
             value={color}
             onChange={(e) => setColor(e.target.value)}

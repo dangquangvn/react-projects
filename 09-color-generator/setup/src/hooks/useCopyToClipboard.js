@@ -5,12 +5,12 @@ export function useCopyToClipboard(timeout = null) {
   const [isCopied, setCopied] = useState(false);
 
   useEffect(() => {
-    if (!timeout) return;
-    const timer = setTimeout(() => {
-      setCopied(false);
-    }, timeout);
+    let timer;
+    if (isCopied && timeout) {
+      timer = setTimeout(() => setCopied(false), timeout);
+    }
     return () => clearTimeout(timer);
-  }, [isCopied]);
+  }, [isCopied, timeout]);
 
   function handleCopy(text) {
     if (typeof text === "string" || typeof text == "number") {

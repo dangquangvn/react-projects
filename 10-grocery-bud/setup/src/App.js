@@ -18,10 +18,17 @@ function App() {
   }, [list]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setList([...list, { id: randomString(), todo: input }]);
-    setInput("");
-    console.log("🚀TCL: ~ file: App.js ~ line 8 ~ App ~ list", list);
+    if (!input) {
+      //display alert
+    } else if (input && isEditing) {
+      // deal with edit
+    } else {
+      e.preventDefault();
+      const newItem = { id: randomString(), title: input };
+      setList([...list, newItem]);
+      setInput("");
+      console.log("🚀TCL: ~ file: App.js ~ line 8 ~ App ~ list", list);
+    }
   };
 
   const handleClearAll = () => {
@@ -63,22 +70,18 @@ function App() {
           </button>
         </div>
       </form>
-      <div className='grocery-container'>
-        <div className='grocery-list'>
-          {JSON.parse(localStorage.getItem("list")) &&
-            JSON.parse(localStorage.getItem("list")).map((item, index) => (
-              <List
-                key={index}
-                item={item}
-                handleDelete={handleDelete}
-                handleEdit={handleEdit}
-              />
-            ))}
+      {!!list && (
+        <div className='grocery-container'>
+          <List
+            items={list}
+            handleDelete={handleDelete}
+            handleEdit={handleEdit}
+          />
+          <button className='clear-btn' onClick={handleClearAll}>
+            clear items
+          </button>
         </div>
-        <button className='clear-btn' onClick={handleClearAll}>
-          clear items
-        </button>
-      </div>
+      )}
     </section>
   );
 }

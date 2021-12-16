@@ -13,7 +13,7 @@ const List = ({ items, handleDelete, handleEdit }) => {
               <button
                 type='button'
                 className='edit-btn'
-                onClick={() => handleEdit(item)}
+                onClick={() => handleEdit(id)}
               >
                 <FaEdit />
               </button>

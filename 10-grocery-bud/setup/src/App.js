@@ -38,6 +38,17 @@ function App() {
       showAlert(true, "danger", "please enter value");
     } else if (input && isEditing) {
       // deal with edit
+      setList(
+        list.map((item) => {
+          if (item.id == editID) {
+            return { ...item, title: input };
+          }
+          return item;
+        })
+      );
+      setInput("");
+      setEditID(null);
+      setEditing(false);
       showAlert(true, "success", "value changed");
     } else {
       const newItem = { id: randomString(), title: input };
@@ -58,14 +69,16 @@ function App() {
     showAlert(true, "danger", "item removed");
   };
 
-  const handleEdit = (editItem) => {
-    const currentItem = list.filter((item) => item.id === editItem.id);
+  const handleEdit = (id) => {
+    const editItem = list.find((item) => item.id === id);
+    setEditID(editItem.id);
     console.log(
       "🚀TCL: ~ file: App.js ~ line 34 ~ handleEdit ~ currentItem",
-      currentItem
+      editItem
     );
+    setEditing(true);
     // setInput(currentItem.todo);
-    setInput(editItem.todo);
+    setInput(editItem.title);
   };
 
   return (

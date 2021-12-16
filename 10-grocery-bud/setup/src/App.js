@@ -9,7 +9,11 @@ function App() {
   const [list, setList] = useState([]);
   const [isEditing, setEditing] = useState(false);
   const [editID, setEditID] = useState(null);
-  const [alert, setAlert] = useState({ show: false, msg: "", type: "" });
+  const [alert, setAlert] = useState({
+    show: false,
+    msg: "",
+    type: "",
+  });
 
   useEffect(() => {
     list && localStorage.setItem("list", JSON.stringify(list));
@@ -17,16 +21,29 @@ function App() {
     console.log(JSON.parse(localStorage.getItem("list")));
   }, [list]);
 
+  /**
+   * @description function handle setAlert
+   * @param {boolean} [show=false]
+   * @param {string} [type='']
+   * @param {string} [msg='']
+   */
+  const showAlert = (show = false, type = "", msg = "") => {
+    setAlert({ show, type, msg });
+  };
+
   const handleSubmit = async (e) => {
+    e.preventDefault();
     if (!input) {
       //display alert
+      showAlert(true, "danger", "please enter value");
     } else if (input && isEditing) {
       // deal with edit
+      showAlert(true, "success", "value changed");
     } else {
-      e.preventDefault();
       const newItem = { id: randomString(), title: input };
       setList([...list, newItem]);
       setInput("");
+      showAlert(true, "success", "item added to the list");
       console.log("🚀TCL: ~ file: App.js ~ line 8 ~ App ~ list", list);
     }
   };
@@ -53,7 +70,7 @@ function App() {
   return (
     <section className='section-center'>
       <form action='' className='grocery-form' onSubmit={handleSubmit}>
-        {alert.show && <Alert />}
+        {alert.show && <Alert {...alert} removeAlert={showAlert} />}
         <h3>grocery bud setup</h3>
         <div action='' className='form-control'>
           <input

@@ -49,6 +49,7 @@ function App() {
   };
 
   const handleClearAll = () => {
+    showAlert(true, "danger", "empty list");
     setList([]);
   };
 

@@ -3,10 +3,18 @@ import List from "./List";
 import Alert from "./Alert";
 import { randomString } from "./utils";
 
+const getLocalStorage = () => {
+  let list = localStorage.getItem("list");
+  if (list) {
+    return JSON.parse(list);
+  }
+  return [];
+};
+
 function App() {
   // [name, setName]
   const [input, setInput] = useState("");
-  const [list, setList] = useState([]);
+  const [list, setList] = useState(getLocalStorage());
   const [isEditing, setEditing] = useState(false);
   const [editID, setEditID] = useState(null);
   const [alert, setAlert] = useState({
@@ -16,9 +24,8 @@ function App() {
   });
 
   useEffect(() => {
-    list && localStorage.setItem("list", JSON.stringify(list));
-
-    console.log(JSON.parse(localStorage.getItem("list")));
+    localStorage.setItem("list", JSON.stringify(list));
+    // console.log(JSON.parse(localStorage.getItem("list")));
   }, [list]);
 
   /**
@@ -31,6 +38,10 @@ function App() {
     setAlert({ show, type, msg });
   };
 
+  /**
+   * @description handle submit button with 3 cases
+   * @param {*} e event
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!input) {
@@ -105,6 +116,7 @@ function App() {
         <div className='grocery-container'>
           <List
             items={list}
+            // items={getLocalStorage()}
             handleDelete={handleDelete}
             handleEdit={handleEdit}
           />

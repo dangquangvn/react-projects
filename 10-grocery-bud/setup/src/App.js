@@ -55,7 +55,7 @@ function App() {
 
   const handleDelete = (id) => {
     setList((list) => list.filter((item) => item.id !== id));
-    console.log(id);
+    showAlert(true, "danger", "item removed");
   };
 
   const handleEdit = (editItem) => {
@@ -71,7 +71,7 @@ function App() {
   return (
     <section className='section-center'>
       <form action='' className='grocery-form' onSubmit={handleSubmit}>
-        {alert.show && <Alert {...alert} removeAlert={showAlert} />}
+        {alert.show && <Alert {...alert} removeAlert={showAlert} list={list} />}
         <h3>grocery bud setup</h3>
         <div action='' className='form-control'>
           <input

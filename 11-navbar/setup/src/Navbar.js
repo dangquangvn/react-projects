@@ -27,6 +27,7 @@ const Navbar = () => {
             <FaBars />
           </button>
         </div>
+        {/* <div className={`links-container ${isExpand ? 'show-container' : ''}`} ref={linksRef}> */}
         <div className='links-container show-container' ref={linksRef}>
           <ul className='links'>
             {links &&

@@ -3,6 +3,7 @@ import { FaBars } from "react-icons/fa";
 import logo from "./logo.svg";
 
 const Home = ({ showModal, setShowModal }) => {
+  // const modal = useContext(modalContext);
   return (
     <main>
       <button className='sidebar-toggle'>

@@ -1,8 +1,17 @@
-// import React, { useState, useContext } from 'react'
-import React from "react";
+import React, { useState, useContext } from "react";
 
-const context = () => {
-  return <div></div>;
+const AppContext = React.createContext();
+
+// we will wrap out whole App in AppProvider
+const AppProvider = ({ children }) => {
+  return (
+    <AppContext.Provider value={"hello world"}>{children}</AppContext.Provider>
+  );
 };
 
-export default context;
+// custom hook
+export const useGlobalContext = () => {
+  return useContext(AppContext);
+};
+
+export { AppContext, AppProvider };

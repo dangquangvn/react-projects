@@ -1,14 +1,22 @@
-import React from "react";
+import React, { useRef } from "react";
 import logo from "./logo.svg";
 import { FaTimes } from "react-icons/fa";
 import { social, links } from "./data";
+import { useGlobalContext } from "./context";
+import { useOnClickOutside } from "./hooks/onClickOutsideHook";
 
 const Sidebar = () => {
+  const { isSidebarOpen, closeSidebar } = useGlobalContext();
+  const sidebarRef = useRef();
+  useOnClickOutside(sidebarRef, closeSidebar);
   return (
-    <div className={`sidebar show-sidebar`}>
+    <div
+      className={`sidebar ${isSidebarOpen ? "show-sidebar" : ""}`}
+      ref={sidebarRef}
+    >
       <div className='sidebar-header'>
         <img src={logo} alt='coding addict' className='logo' />
-        <button className='close-btn'>
+        <button className='close-btn' onClick={closeSidebar}>
           <FaTimes />
         </button>
       </div>

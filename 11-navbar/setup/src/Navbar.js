@@ -6,18 +6,33 @@ import logo from "./logo.svg";
 const Navbar = () => {
   // const [showlinks, setShowLinks]
   const [isExpand, setExpand] = useState(false);
+  // ref to div
+  const linksContainerRef = useRef(null);
+  // ref to out links list
   const linksRef = useRef(null);
   const handleToggler = () => {
     // console.log(linksRef);
     setExpand(!isExpand);
   };
   useEffect(() => {
+    // if (isExpand) {
+    //   linksRef.current.style.height = "200px";
+    // } else {
+    //   linksRef.current.style.height = `0px`;
+    // }
+    //& get height of links list
+    const linksHeight = linksRef.current.getBoundingClientRect().height;
+    console.log(
+      "🚀TCL: ~ file: Navbar.js ~ line 25 ~ useEffect ~ linksHeight",
+      linksHeight
+    );
     if (isExpand) {
-      linksRef.current.style.height = "200px";
+      linksContainerRef.current.style.height = `${linksHeight}px`;
     } else {
-      linksRef.current.style.height = `0px`;
+      linksContainerRef.current.style.height = `0px`;
     }
   }, [isExpand]);
+
   return (
     <nav>
       <div className='nav-center'>
@@ -28,8 +43,8 @@ const Navbar = () => {
           </button>
         </div>
         {/* <div className={`links-container ${isExpand ? 'show-container' : ''}`} ref={linksRef}> */}
-        <div className='links-container show-container' ref={linksRef}>
-          <ul className='links'>
+        <div className='links-container' ref={linksContainerRef}>
+          <ul className='links' ref={linksRef}>
             {links &&
               links.map(({ id, url, text }) => (
                 <li key={id}>

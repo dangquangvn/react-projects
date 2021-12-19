@@ -8,13 +8,15 @@ const AppContext = React.createContext();
 
 const initialState = {
   loading: false,
-  cart: cartItems,
+  // cart: cartItems,
+  cart: [],
   total: 100,
   amount: 5,
 };
 
 const AppProvider = ({ children }) => {
   // const [cart, setCart] = useState(cartItems);
+  // const [data, setData] = useState([]);
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const clearCart = () => {
@@ -36,6 +38,19 @@ const AppProvider = ({ children }) => {
   const getTotal = () => {
     dispatch({ type: "TOTAL" });
   };
+
+  const fetchApi = async () => {
+    dispatch({ type: "LOADING" });
+    const res = await fetch(url);
+    const data = await res.json();
+    // setData(data);
+    console.log("🚀TCL: ~ file: context.js ~ line 43 ~ fetchApi ~ data", data);
+    dispatch({ type: "DISPLAY_ITEMS", payload: { data } });
+  };
+
+  useEffect(() => {
+    fetchApi();
+  }, []);
 
   useEffect(() => {
     getTotal();

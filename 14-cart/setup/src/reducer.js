@@ -54,6 +54,10 @@ const reducer = (state, action) => {
       total = parseFloat(total.toFixed(2)); // toFixed will limit number after dau phay, but toFixed will return a 'string'
       // use passeFloat to convert it into number again
       return { ...state, amount, total };
+    case "LOADING":
+      return { ...state, loading: true };
+    case "DISPLAY_ITEMS":
+      return { ...state, loading: false, cart: payload.data };
     default:
       return state;
   }

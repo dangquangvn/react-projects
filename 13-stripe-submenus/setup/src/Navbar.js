@@ -22,8 +22,13 @@ const Navbar = () => {
     // const position = submenuRef.current;
     console.log(name);
   };
+  const handleDisplaySubmenu = (e) => {
+    if (!e.target.classList.contains("link-btn")) {
+      closeSubmenu();
+    }
+  };
   return (
-    <nav className='nav '>
+    <nav className='nav ' onMouseOver={handleDisplaySubmenu}>
       <div className='nav-center'>
         <div className='nav-header'>
           <img src={logo} alt='Stripe' className='nav-logo' />
@@ -39,8 +44,8 @@ const Navbar = () => {
                 className='link-btn'
                 key={index}
                 // onMouseEnter={openSubmenu}
-                onMouseEnter={handleLocationSubmenu}
-                onMouseLeave={closeSubmenu}
+                onMouseOver={handleLocationSubmenu}
+                // onMouseLeave={closeSubmenu}
               >
                 <button className='link-btn'>{page}</button>
               </li>

@@ -19,12 +19,14 @@ const reducer = (state, action) => {
       return { ...state, cart: incCart };
 
     case "DECREASE":
-      let decCart = state.cart.map((item) => {
-        if (item.id === payload.id) {
-          return { ...item, amount: item.amount - 1 };
-        }
-        return item;
-      });
+      let decCart = state.cart
+        .map((item) => {
+          if (item.id === payload.id) {
+            return { ...item, amount: item.amount - 1 };
+          }
+          return item;
+        })
+        .filter((item) => item.amount !== 0);
       return { ...state, cart: decCart };
     case "TOTAL":
       let amount = state.cart.reduce((acc, item) => {

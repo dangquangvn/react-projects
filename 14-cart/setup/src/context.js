@@ -21,6 +21,11 @@ const AppProvider = ({ children }) => {
     dispatch({ type: "CLEAR_CART" });
   };
 
+  const removeSingleItem = (id) => {
+    console.log(id);
+    dispatch({ type: "REMOVE_ITEM", payload: id });
+  };
+
   const increseItem = () => {
     dispatch({ type: "INCREASE_ITEM" });
   };
@@ -30,6 +35,7 @@ const AppProvider = ({ children }) => {
       value={{
         ...state,
         clearCart,
+        removeSingleItem,
       }}
     >
       {children}

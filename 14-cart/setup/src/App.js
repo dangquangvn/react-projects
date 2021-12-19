@@ -1,10 +1,11 @@
-import React from 'react'
-import { useGlobalContext } from './context'
+import React, { useEffect } from "react";
+import { useGlobalContext } from "./context";
 
 // components
-import Navbar from './Navbar'
-import CartContainer from './CartContainer'
+import Navbar from "./Navbar";
+import CartContainer from "./CartContainer";
 // items
+// useEffect(()=>{})
 
 function App() {
   // if (loading) {
@@ -19,7 +20,7 @@ function App() {
       <Navbar />
       <CartContainer />
     </main>
-  )
+  );
 }
 
-export default App
+export default App;

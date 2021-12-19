@@ -23,12 +23,23 @@ const AppProvider = ({ children }) => {
 
   const removeSingleItem = (id) => {
     console.log(id);
-    dispatch({ type: "REMOVE_ITEM", payload: id });
+    dispatch({ type: "REMOVE_ITEM", payload: { id } });
   };
 
-  const increseItem = () => {
-    dispatch({ type: "INCREASE_ITEM" });
+  const increaseItem = (id) => {
+    dispatch({ type: "INCREASE", payload: { id } });
   };
+  const decreaseItem = (id) => {
+    dispatch({ type: "DECREASE", payload: { id } });
+  };
+
+  const getTotal = () => {
+    dispatch({ type: "TOTAL" });
+  };
+
+  // useEffect(() => {
+  //   getTotal();
+  // }, [increaseItem, decreaseItem]);
 
   return (
     <AppContext.Provider
@@ -36,6 +47,9 @@ const AppProvider = ({ children }) => {
         ...state,
         clearCart,
         removeSingleItem,
+        increaseItem,
+        decreaseItem,
+        getTotal,
       }}
     >
       {children}

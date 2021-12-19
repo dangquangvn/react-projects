@@ -29,14 +29,31 @@ const reducer = (state, action) => {
         .filter((item) => item.amount !== 0);
       return { ...state, cart: decCart };
     case "TOTAL":
-      let amount = state.cart.reduce((acc, item) => {
-        return acc + item.amount;
-      }, 0);
-      console.log(
-        "🚀TCL: ~ file: reducer.js ~ line 33 ~ total ~ total",
-        amount
+      // let amount = state.cart.reduce((acc, item) => {
+      //   return acc + item.amount;
+      // }, 0);
+      // let total = state.cart.reduce((acc, item) => {
+      //   return acc + item.price * item.amount;
+      // }, 0);
+      let { amount, total } = state.cart.reduce(
+        // acc : cong don
+        // item: state.cart[index]
+        (acc, item) => {
+          const { price, amount } = item;
+          const itemTotal = price * amount;
+          acc.amount += amount; //number of items
+          acc.total += itemTotal; // price of 1 item * number of item
+
+          return acc;
+        },
+        {
+          amount: 0,
+          total: 0,
+        }
       );
-      return { ...state, amount };
+      total = parseFloat(total.toFixed(2)); // toFixed will limit number after dau phay, but toFixed will return a 'string'
+      // use passeFloat to convert it into number again
+      return { ...state, amount, total };
     default:
       return state;
   }

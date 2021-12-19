@@ -7,7 +7,9 @@ const AppProvider = ({ children }) => {
   const [isSubmenuOpen, setSubmenuOpen] = useState(false);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [leftPosition, setLeftPosition] = useState(100);
-  const openSubmenu = () => {
+  const [location, setLocation] = useState({});
+  const openSubmenu = (text, coordinates) => {
+    setLocation(coordinates);
     setSubmenuOpen(true);
   };
   const closeSubmenu = () => {
@@ -39,6 +41,7 @@ const AppProvider = ({ children }) => {
         leftPosition,
         setLeftPosition,
         handleLeftPosition,
+        location,
       }}
     >
       {children}

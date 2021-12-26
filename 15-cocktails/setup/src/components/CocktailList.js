@@ -4,19 +4,19 @@ import Loading from "./Loading";
 import { useGlobalContext } from "../context";
 
 const CocktailList = () => {
-  const { loading, drinks } = useGlobalContext();
+  const { loading, cocktails } = useGlobalContext();
   const [list, setList] = useState([]);
   // const drinksList = cocktailList && cocktailList.drinks;
   // const { drinks } = cocktailList || {};
 
-  useEffect(() => {
-    setList(drinks);
-  }, [drinks]);
+  // useEffect(() => {
+  //   setList(drinks);
+  // }, [drinks]);
 
-  console.log(
-    "🚀TCL: ~ file: CocktailList.js ~ line 11 ~ CocktailList ~ drinks",
-    list
-  );
+  // console.log(
+  //   "🚀TCL: ~ file: CocktailList.js ~ line 11 ~ CocktailList ~ drinks",
+  //   list
+  // );
   // if (drinks && drinks[0]) {
   //   console.log(
   //     "🚀TCL: ~ file: CocktailList.js ~ line 8 ~ CocktailList ~ CocktailList",
@@ -27,7 +27,7 @@ const CocktailList = () => {
   if (loading) {
     return <Loading />;
   }
-  if (drinks.length < 1) {
+  if (cocktails.length < 1) {
     return (
       <h2 className='section-title'>
         no cocktails matched your search criteria
@@ -38,8 +38,8 @@ const CocktailList = () => {
     <section className='section'>
       <h2 className='section-title'>Cocktails</h2>
       <div className='cocktails-center'>
-        {list &&
-          list.map((drink) => <Cocktail key={drink.idDrink} {...drink} />)}
+        {cocktails &&
+          cocktails.map((drink) => <Cocktail key={drink.idDrink} {...drink} />)}
       </div>
     </section>
   );

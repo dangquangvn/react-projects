@@ -2,25 +2,27 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const Cocktail = ({
-  strAlcoholic,
-  strDrink,
-  strGlass,
-  strDrinkThumb,
-  idDrink,
+  // strAlcoholic,
+  // strDrink,
+  // strGlass,
+  // strDrinkThumb,
+  // idDrink,
+  image,
+  name,
+  id,
+  info,
+  glass,
 }) => {
   return (
     <article className='cocktail'>
-      <div className='cocktail-img'>
-        <img src={strDrinkThumb} alt={strGlass} />
+      <div className='img-container'>
+        <img src={image} alt={name} />
       </div>
       <div className='cocktail-footer'>
-        <h3>{strDrink}</h3>
-        <h4>{strGlass}</h4>
-        <p>{strAlcoholic}</p>
-        <Link
-          to={`/cocktail/${idDrink}`}
-          className='btn btn-primary btn-details'
-        >
+        <h3>{name}</h3>
+        <h4>{glass}</h4>
+        <p>{info}</p>
+        <Link to={`/cocktail/${id}`} className='btn btn-primary btn-details'>
           details
         </Link>
       </div>

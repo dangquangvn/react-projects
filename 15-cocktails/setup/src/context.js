@@ -10,6 +10,7 @@ const AppProvider = ({ children }) => {
   //searchTerm / searchQuery
   const [textSearch, setTextSearch] = useState("");
   const [cocktails, setCocktails] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   //& prevent space or some special character
   const prepareSearchQuery = (query) => {
@@ -18,34 +19,72 @@ const AppProvider = ({ children }) => {
     return encodeURI(urlWithSearch);
   };
 
-  //& get data using useFetch hook
-  const {
-    loading,
-    data: { drinks },
-  } = useFetch(prepareSearchQuery(textSearch));
+  //todo get data using useFetch hook
+  // const {
+  //   loading,
+  //   data: { drinks },
+  // } = useFetch(prepareSearchQuery(textSearch));
+  //todo get data with function
+  const fetchDrinks = useCallback(async () => {
+    try {
+      // if (!textSearch || textSearch.trim() === "") return;
+      setLoading(true);
+      const URL = prepareSearchQuery(textSearch);
+
+      const response = await fetch(URL);
+      const data = await response.json();
+      const { drinks } = data || [];
+      if (drinks) {
+        const newCocktails = drinks.map((drink) => {
+          const { idDrink, strDrink, strDrinkThumb, strAlcoholic, strGlass } =
+            drink;
+
+          return {
+            id: idDrink,
+            name: strDrink,
+            image: strDrinkThumb,
+            info: strAlcoholic,
+            glass: strGlass,
+          };
+        });
+        setCocktails(newCocktails);
+      } else {
+        setCocktails([]);
+      }
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  }, [textSearch]);
+
+  useEffect(() => {
+    fetchDrinks();
+  }, [textSearch, fetchDrinks]);
+  // useDebounce(textSearch, 500, fetchDrinks);
 
   // put data just fetched into state to avoid undefined
-  const getCocktails = () => {
-    if (drinks) {
-      const newCocktails = drinks.map((item) => {
-        const { idDrink, strDrink, strDrinkThumb, strAlcoholic, strGlass } =
-          item;
-        return {
-          id: idDrink,
-          name: strDrink,
-          image: strDrinkThumb,
-          info: strAlcoholic,
-          glass: strGlass,
-        };
-      });
-      setCocktails(newCocktails);
-    } else {
-      setCocktails([]);
-    }
-  };
-  useEffect(() => {
-    getCocktails();
-  }, [drinks]);
+  // const getCocktails = () => {
+  //   if (drinks) {
+  //     const newCocktails = drinks.map((item) => {
+  //       const { idDrink, strDrink, strDrinkThumb, strAlcoholic, strGlass } =
+  //         item;
+  //       return {
+  //         id: idDrink,
+  //         name: strDrink,
+  //         image: strDrinkThumb,
+  //         info: strAlcoholic,
+  //         glass: strGlass,
+  //       };
+  //     });
+  //     setCocktails(newCocktails);
+  //   } else {
+  //     setCocktails([]);
+  //   }
+  // };
+  // useEffect(() => {
+  //   getCocktails();
+  // }, [drinks]);
 
   const getText = (text) => {
     setTextSearch(text);
@@ -61,8 +100,9 @@ const AppProvider = ({ children }) => {
         // cocktailList,
         textSearch,
         getText,
-        drinks,
+        // drinks,
         cocktails,
+        setTextSearch,
       }}
     >
       {children}

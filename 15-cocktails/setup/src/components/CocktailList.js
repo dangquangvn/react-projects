@@ -23,6 +23,17 @@ const CocktailList = () => {
   //     drinks[0]
   //   );
   // }
+  // const loading = true;
+  if (loading) {
+    return <Loading />;
+  }
+  if (drinks.length < 1) {
+    return (
+      <h2 className='section-title'>
+        no cocktails matched your search criteria
+      </h2>
+    );
+  }
   return (
     <section className='section'>
       <h2 className='section-title'>Cocktails</h2>

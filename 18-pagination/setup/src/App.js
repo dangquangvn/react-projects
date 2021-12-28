@@ -4,11 +4,11 @@ import Follower from "./Follower";
 function App() {
   const [page, setPage] = useState(0);
   const { loading, data: personData } = useFetch();
-  const [followers, setFollwers] = useState([]);
+  const [followers, setFollowers] = useState([]);
 
   useEffect(() => {
     if (loading) return;
-    setFollwers(personData[page]);
+    setFollowers(personData[page]);
     console.log("page -->", page);
   }, [loading, page]);
   const checkNumber = (num) => {

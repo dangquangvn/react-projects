@@ -7,9 +7,9 @@ function App() {
   console.log("🚀TCL: ~ file: App.js ~ line 6 ~ App ~ person", personData);
 
   // if (loading) {
-  const { avatar_url: image, id, login: name } = personData;
-  const newPerson = { image, id, name };
-  setPerson(newPerson);
+  // const { avatar_url: image, id, login: name } = personData;
+  // const newPerson = { image, id, name };
+  // setPerson(newPerson);
   // } else {
   //   setPerson([]);
   // }
@@ -18,10 +18,17 @@ function App() {
   return (
     <main>
       <div className='section-title'>
-        <h2>pagination starter</h2>
+        <h1>{loading ? "loading..." : "pagination starter"}</h1>
         <div className='underline'></div>
       </div>
-      <div className='list'>{/* <img src={image} alt={name} /> */}</div>
+      <div className='followers'>
+        <div className='container'>
+          {/* <img src={image} alt={name} /> */}
+          {personData.map((follower) => (
+            <Follower key={follower.id} {...follower} />
+          ))}
+        </div>
+      </div>
     </main>
   );
 }

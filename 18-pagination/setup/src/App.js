@@ -2,15 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useFetch } from "./useFetch";
 import Follower from "./Follower";
 function App() {
-  const [person, setPerson] = useState();
   const [page, setPage] = useState(0);
   const { loading, data: personData } = useFetch();
-  console.log(
-    "🚀TCL: ~ file: App.js ~ line 7 ~ App ~ personData",
-    personData,
-    !!personData
-  );
+  const [followers, setFollwers] = useState([]);
 
+  useEffect(() => {
+    if (loading) return;
+    setFollwers(personData[page]);
+    console.log("page -->", page);
+  }, [loading, page]);
   const checkNumber = (num) => {
     if (!personData.length) return;
     if (num > personData.length - 1) {
@@ -24,15 +24,16 @@ function App() {
   const handlePage = (e) => {
     if (!e.target.classList.contains("page-btn")) return;
     console.log(e.target.dataset.page);
-    setPage(e.target.dataset.page);
+    setPage(parseInt(e.target.dataset.page));
   };
 
   const handlePrevNextBtn = (e) => {
     if (e.target.classList.contains("next-btn")) {
-      setPage(checkNumber(page + 1));
+      setPage((page) => checkNumber(page + 1));
     } else if (e.target.classList.contains("prev-btn")) {
-      setPage(checkNumber(page - 1));
+      setPage((page) => checkNumber(page - 1));
     }
+    console.log(e.target);
   };
 
   return (
@@ -43,10 +44,9 @@ function App() {
       </div>
       <div className='followers'>
         <div className='container'>
-          {personData.length &&
-            personData[page].map((follower) => (
-              <Follower key={follower.id} {...follower} />
-            ))}
+          {followers.map((follower) => (
+            <Follower key={follower.id} {...follower} />
+          ))}
         </div>
       </div>
       <div className='btn-container'>

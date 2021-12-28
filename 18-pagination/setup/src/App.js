@@ -21,10 +21,11 @@ function App() {
     return num;
   };
 
-  const handlePage = (e) => {
-    if (!e.target.classList.contains("page-btn")) return;
-    console.log(e.target.dataset.page);
-    setPage(parseInt(e.target.dataset.page));
+  const handlePage = (num) => {
+    // if (!e.target.classList.contains("page-btn")) return;
+    // console.log(e.target.dataset.page);
+    // setPage(parseInt(e.target.dataset.page));
+    setPage(num);
   };
 
   const handlePrevNextBtn = (e) => {
@@ -42,34 +43,35 @@ function App() {
         <h1>{loading ? "loading..." : "pagination starter"}</h1>
         <div className='underline'></div>
       </div>
-      <div className='followers'>
+      <section className='followers'>
         <div className='container'>
           {followers.map((follower) => (
             <Follower key={follower.id} {...follower} />
           ))}
         </div>
-      </div>
-      <div className='btn-container'>
-        <div className='prev-btn' onClick={handlePrevNextBtn}>
-          Prev
-        </div>
-        {personData.length &&
-          personData.map((_, index) => (
-            <div
-              className={`page-btn ${
-                parseInt(page) === index ? "active-btn" : ""
-              }`}
-              key={index}
-              data-page={index}
-              onClick={handlePage}
-            >
-              {index}
-            </div>
-          ))}
-        <div className='next-btn' onClick={handlePrevNextBtn}>
-          Next
-        </div>
-      </div>
+        {!loading && (
+          <div className='btn-container'>
+            <button className='prev-btn' onClick={handlePrevNextBtn}>
+              Prev
+            </button>
+            {personData.length &&
+              personData.map((_, index) => (
+                <button
+                  className={`page-btn ${
+                    parseInt(page) === index ? "active-btn" : ""
+                  }`}
+                  key={index}
+                  onClick={() => handlePage(index)}
+                >
+                  {index + 1}
+                </button>
+              ))}
+            <button className='next-btn' onClick={handlePrevNextBtn}>
+              Next
+            </button>
+          </div>
+        )}
+      </section>
     </main>
   );
 }

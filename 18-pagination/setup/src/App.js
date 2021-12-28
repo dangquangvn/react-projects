@@ -4,7 +4,6 @@ import Follower from "./Follower";
 function App() {
   const [person, setPerson] = useState();
   const { loading, data: personData } = useFetch();
-  console.log("🚀TCL: ~ file: App.js ~ line 6 ~ App ~ person", personData);
 
   // if (loading) {
   // const { avatar_url: image, id, login: name } = personData;

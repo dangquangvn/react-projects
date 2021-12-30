@@ -6,76 +6,113 @@ const clientID = `?client_id=${process.env.REACT_APP_ACCESS_KEY}`;
 const mainUrl = `https://api.unsplash.com/photos/`;
 const searchUrl = `https://api.unsplash.com/search/photos/`;
 
+const observerOptions = {
+  root: null,
+  rootMargin: "0px",
+  threshold: 1,
+};
+
 function App() {
   const [photosPerPage, setPhotosPerPage] = useState(10);
-  console.log(
-    "🚀TCL: ~ file: App.js ~ line 11 ~ App ~ photosPerPage",
-    photosPerPage
-  );
+  const [page, setPage] = useState(1);
+  console.log("🚀TCL: ~ file: App.js ~ line 18 ~ App ~ page", page);
   const [url, setUrl] = useState(
     `${mainUrl}${clientID}&per_page=${photosPerPage}`
   );
-  console.log("🚀TCL: ~ file: App.js ~ line 16 ~ App ~ url", url);
   const [searchQuery, setSearchQuery] = useState("");
   // const { loading, data: photoData } = useFetch(url);
   const [photos, setPhotos] = useState([]);
-  console.log("🚀TCL: ~ file: App.js ~ line 14 ~ App ~ photos", photos);
   const [loading, setLoading] = useState(false);
   const photosRef = useRef(null);
 
-  const observerOptions = {
-    root: null,
-    rootMargin: "0px",
-    threshold: 1,
+  const fetchPhotos = async () => {
+    let url;
+    url = `${mainUrl}${clientID}&page=${page}`;
+    setLoading(true);
+    try {
+      const response = await fetch(url);
+      const photoData = await response.json();
+      const newPhotos = photoData.map((photo) => {
+        const {
+          id,
+          urls: { full: image },
+          alt_description: desc,
+          likes,
+          user: {
+            first_name: firstName,
+            last_name: lastName,
+            profile_image: { large: avatar },
+          },
+        } = photo;
+        return {
+          id,
+          image,
+          desc,
+          likes,
+          name: `${firstName} ${lastName}`,
+          avatar,
+        };
+      });
+      // setPhotos(newPhotos);
+      setPhotos((oldPhotos) => [...oldPhotos, ...newPhotos]);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
   };
 
-  const fetchPhotos = useCallback(
-    async (url) => {
-      console.log("🚀TCL: ~ file: App.js ~ line 11 ~ App ~ url", url);
-      setLoading(true);
-      try {
-        const response = await fetch(url);
-        const photoData = await response.json();
-        const newPhotos = photoData.map((photo) => {
-          const {
-            id,
-            urls: { full: image },
-            alt_description: desc,
-            likes,
-            user: {
-              first_name: firstName,
-              last_name: lastName,
-              profile_image: { large: avatar },
-            },
-          } = photo;
-          return {
-            id,
-            image,
-            desc,
-            likes,
-            name: `${firstName} ${lastName}`,
-            avatar,
-          };
-        });
-        setPhotos(newPhotos);
-      } catch (error) {
-        console.log(error);
+  //TODO: infinite scroll: METHOD 1: using scroll event
+  //& add -2px for trigger load images sooner
+  useEffect(() => {
+    const event = window.addEventListener("scroll", () => {
+      if (
+        !loading &&
+        window.innerHeight + window.scrollY >= document.body.scrollHeight - 2
+      ) {
+        console.log("it worked");
+        setPage((oldPage) => oldPage + 1);
+        // setPage(page + 1);
       }
-      setLoading(false);
-    },
-    [url]
-  );
+      // console.log(`innerHeight: ${window.innerHeight}`);
+      // console.log(`scrollY: ${window.scrollY}`);
+      // console.log(`body height: ${document.body.scrollHeight}`);
+    });
+    return () => window.removeEventListener("scroll", event);
+  }, []);
+  //TODO end METHOD 1: using scroll event
+
+  //TODO: infinite scroll: METHOD 2: using intersection observer
+  // load when scroll to bottom
+  // useEffect(() => {
+  //   const observer = new IntersectionObserver((entries) => {
+  //     // console.log(entries[0]);
+
+  //     if (entries[0].isIntersecting) {
+  //       //do your actions here
+  //       setPhotosPerPage(photosPerPage + 10);
+  //       searchQuery ? fetchPhotosWithSearch(url) : fetchPhotos(url);
+  //       console.log("It works!");
+  //     } else {
+  //       console.log("cuoc song ma");
+  //     }
+  //   }, observerOptions);
+  //   if (photosRef.current) {
+  //     observer.observe(photosRef.current);
+  //   }
+  // }, [photosRef, loading]);
+  //TODO: END METHOD 2: using intersection observer
 
   const fetchPhotosWithSearch = useCallback(
     async (url) => {
-      console.log("🚀TCL: ~ file: App.js ~ line 11 ~ App ~ url", url);
+      // let url;
+      // url = `${mainUrl}${clientID}&per_page=${photosPerPage}`;
+
       setLoading(true);
       try {
         const response = await fetch(url);
         const data = await response.json();
-        // console.log("🚀TCL: ~ file: App.js ~ line 61 ~ data", data);
         const { results: photoData } = data;
-        // console.log("🚀TCL: ~ file: App.js ~ line 63 ~ results", results);
         const newPhotos = photoData.map((photo) => {
           const {
             id,
@@ -85,7 +122,7 @@ function App() {
             user: {
               first_name: firstName,
               last_name: lastName,
-              profile_image: { large: avatar },
+              profile_image: { medium: avatar },
             },
           } = photo;
           return {
@@ -105,6 +142,14 @@ function App() {
     },
     [url]
   );
+
+  // useEffect(() => {
+  //   if (searchQuery) {
+  //     fetchPhotosWithSearch(url);
+  //   } else {
+  //     fetchPhotos(url);
+  //   }
+  // }, [fetchPhotos, url, photosPerPage]);
 
   useEffect(() => {
     if (searchQuery) {
@@ -112,8 +157,7 @@ function App() {
     } else {
       fetchPhotos(url);
     }
-  }, [fetchPhotos, url, photosPerPage]);
-
+  }, [page]);
   // useEffect(() => {
   //   if (loading) return;
   //   const newPhotos = photoData.map((photo) => {
@@ -155,25 +199,6 @@ function App() {
     fetchPhotosWithSearch(url);
   };
 
-  // load when scroll to bottom
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      // console.log(entries[0]);
-
-      if (entries[0].isIntersecting) {
-        //do your actions here
-        setPhotosPerPage(photosPerPage + 10);
-        searchQuery ? fetchPhotosWithSearch(url) : fetchPhotos(url);
-        console.log("It works!");
-      } else {
-        console.log("cuoc song ma");
-      }
-    }, observerOptions);
-    if (photosRef.current) {
-      observer.observe(photosRef.current);
-    }
-  }, [photosRef, loading]);
-
   return (
     <main>
       <div className='search'>
@@ -190,19 +215,12 @@ function App() {
           </button>
         </form>
       </div>
-      {loading ? (
-        <div className='loading'>Loading...</div>
-      ) : (
-        <section className='photos'>
-          <div className='photos-center'>
-            {photos &&
-              photos.map((photo) => <Photo key={photo.id} {...photo} />)}
-          </div>
-          <button className='btn' ref={photosRef}>
-            Load more
-          </button>
-        </section>
-      )}
+      <section className='photos'>
+        <div className='photos-center'>
+          {photos && photos.map((photo) => <Photo key={photo.id} {...photo} />)}
+        </div>
+        {loading && <h2 className='loading'>Loading...</h2>}
+      </section>
     </main>
   );
 }

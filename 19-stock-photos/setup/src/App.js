@@ -114,44 +114,46 @@ function App() {
 
   //TODO: infinite scroll: METHOD 1: using scroll event
   //& add -2px for trigger load images sooner
-  useEffect(() => {
-    const event = window.addEventListener("scroll", () => {
-      if (
-        !loading &&
-        window.innerHeight + window.scrollY >= document.body.scrollHeight - 2
-      ) {
-        console.log("it worked");
-        setPage((oldPage) => oldPage + 1);
-        // setPage(page + 1);
-      }
-      // console.log(`innerHeight: ${window.innerHeight}`);
-      // console.log(`scrollY: ${window.scrollY}`);
-      // console.log(`body height: ${document.body.scrollHeight}`);
-    });
-    return () => window.removeEventListener("scroll", event);
-    // eslint-disable-next-line
-  }, []);
+  // useEffect(() => {
+  //   const event = window.addEventListener("scroll", () => {
+  //     if (
+  //       !loading &&
+  //       window.innerHeight + window.scrollY >= document.body.scrollHeight - 2
+  //     ) {
+  //       console.log("it worked");
+  //       setPage((oldPage) => oldPage + 1);
+  //       // setPage(page + 1);
+  //     }
+  //     // console.log(`innerHeight: ${window.innerHeight}`);
+  //     // console.log(`scrollY: ${window.scrollY}`);
+  //     // console.log(`body height: ${document.body.scrollHeight}`);
+  //   });
+  //   return () => window.removeEventListener("scroll", event);
+  //   // eslint-disable-next-line
+  // }, []);
   //TODO end METHOD 1: using scroll event
 
   //TODO: infinite scroll: METHOD 2: using intersection observer
   // load when scroll to bottom
-  // useEffect(() => {
-  //   const observer = new IntersectionObserver((entries) => {
-  //     // console.log(entries[0]);
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      // console.log(entries[0]);
 
-  //     if (entries[0].isIntersecting) {
-  //       //do your actions here
-  //       setPhotosPerPage(photosPerPage + 10);
-  //       searchQuery ? fetchPhotosWithSearch(url) : fetchPhotos(url);
-  //       console.log("It works!");
-  //     } else {
-  //       console.log("cuoc song ma");
-  //     }
-  //   }, observerOptions);
-  //   if (photosRef.current) {
-  //     observer.observe(photosRef.current);
-  //   }
-  // }, [photosRef, loading]);
+      if (entries[0].isIntersecting) {
+        //do your actions here
+        // setPhotosPerPage(photosPerPage + 10);
+        // searchQuery ? fetchPhotosWithSearch(url) : fetchPhotos(url);
+        // console.log("It works!");
+        setPage((oldPage) => oldPage + 1);
+      }
+      // else {
+      //   console.log("cuoc song ma");
+      // }
+    }, observerOptions);
+    if (photosRef.current) {
+      observer.observe(photosRef.current);
+    }
+  }, []);
   //TODO: END METHOD 2: using intersection observer
 
   useEffect(() => {
@@ -184,7 +186,11 @@ function App() {
         <div className='photos-center'>
           {photos && photos.map((photo) => <Photo key={photo.id} {...photo} />)}
         </div>
-        {loading && <h2 className='loading'>Loading...</h2>}
+        {/* {loading && ( */}
+        <h2 className='loading' ref={photosRef}>
+          Loading...
+        </h2>
+        {/* )} */}
       </section>
     </main>
   );

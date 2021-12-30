@@ -14,7 +14,7 @@ const observerOptions = {
 
 function App() {
   const [photosPerPage, setPhotosPerPage] = useState(10);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   console.log("🚀TCL: ~ file: App.js ~ line 18 ~ App ~ page", page);
   const [url, setUrl] = useState(
     `${mainUrl}${clientID}&per_page=${photosPerPage}`
@@ -27,34 +27,85 @@ function App() {
 
   const fetchPhotos = async () => {
     let url;
-    url = `${mainUrl}${clientID}&page=${page}`;
+    const urlPage = `&page=${page}`;
+    const urlSearchQuery = `&query=${searchQuery}`;
+    if (searchQuery) {
+      url = `${searchUrl}${clientID}${urlPage}${urlSearchQuery}`;
+    } else {
+      url = `${mainUrl}${clientID}${urlPage}`;
+    }
     setLoading(true);
     try {
       const response = await fetch(url);
       const photoData = await response.json();
-      const newPhotos = photoData.map((photo) => {
-        const {
-          id,
-          urls: { full: image },
-          alt_description: desc,
-          likes,
-          user: {
-            first_name: firstName,
-            last_name: lastName,
-            profile_image: { large: avatar },
-          },
-        } = photo;
-        return {
-          id,
-          image,
-          desc,
-          likes,
-          name: `${firstName} ${lastName}`,
-          avatar,
-        };
-      });
+
+      let newPhotos;
+      // if (searchQuery && page === 1) {
+      // console.log("searchQuery && page === 1", photoData.results);
+      // return photoData.results;
+      // } else
+      if (searchQuery) {
+        console.log("searchQuery");
+        const { results } = photoData;
+        newPhotos =
+          (results &&
+            results.map((photo) => {
+              const {
+                id,
+                urls: { full: image },
+                alt_description: desc,
+                likes,
+                user: {
+                  first_name: firstName,
+                  last_name: lastName,
+                  profile_image: { large: avatar },
+                },
+              } = photo;
+              return {
+                id,
+                image,
+                desc,
+                likes,
+                name: `${firstName} ${lastName}`,
+                avatar,
+              };
+            })) ||
+          [];
+        // return [...oldPhotos, ...newPhotos];
+        // console.log("🚀TCL: newPhotos with searchQuery", newPhotos);
+      } else {
+        console.log("default");
+        newPhotos = photoData.map((photo) => {
+          const {
+            id,
+            urls: { full: image },
+            alt_description: desc,
+            likes,
+            user: {
+              first_name: firstName,
+              last_name: lastName,
+              profile_image: { large: avatar },
+            },
+          } = photo;
+          return {
+            id,
+            image,
+            desc,
+            likes,
+            name: `${firstName} ${lastName}`,
+            avatar,
+          };
+        });
+        // console.log("🚀TCL: newPhotos ", newPhotos);
+        // return [...oldPhotos, ...newPhotos];
+      }
+
       // setPhotos(newPhotos);
-      setPhotos((oldPhotos) => [...oldPhotos, ...newPhotos]);
+      if (page === 1) {
+        setPhotos(newPhotos);
+      } else {
+        setPhotos((oldPhotos) => [...oldPhotos, ...newPhotos]);
+      }
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -152,11 +203,11 @@ function App() {
   // }, [fetchPhotos, url, photosPerPage]);
 
   useEffect(() => {
-    if (searchQuery) {
-      fetchPhotosWithSearch(url);
-    } else {
-      fetchPhotos(url);
-    }
+    // if (searchQuery) {
+    //   fetchPhotosWithSearch(url);
+    // } else {
+    fetchPhotos(url);
+    // }
   }, [page]);
   // useEffect(() => {
   //   if (loading) return;
@@ -192,11 +243,13 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("handle submit");
-    const displayPhotoUrl = `${mainUrl}${clientID}&per_page=${photosPerPage}`;
-    const displayPhotoUrlWithSearch = `${searchUrl}${clientID}&per_page=${photosPerPage}&query=${searchQuery}`;
-    searchQuery ? setUrl(displayPhotoUrlWithSearch) : setUrl(displayPhotoUrl);
-    fetchPhotosWithSearch(url);
+    // console.log("handle submit");
+    // const displayPhotoUrl = `${mainUrl}${clientID}&per_page=${photosPerPage}`;
+    // const displayPhotoUrlWithSearch = `${searchUrl}${clientID}&per_page=${photosPerPage}&query=${searchQuery}`;
+    // searchQuery ? setUrl(displayPhotoUrlWithSearch) : setUrl(displayPhotoUrl);
+    // fetchPhotosWithSearch(url);
+    setPage(1);
+    // fetchPhotos();
   };
 
   return (

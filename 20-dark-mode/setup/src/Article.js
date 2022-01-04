@@ -20,18 +20,13 @@ const Article = ({ id, title, date, length, snippet }) => {
     <article className='post'>
       <h2>{title}</h2>
       <div className='post-info'>
-        <p>
-          {new Intl.DateTimeFormat("en-GB", {
+        {/* {new Intl.DateTimeFormat("en-GB", {
             weekday: "long",
             day: "numeric",
             year: "numeric",
-          }).format(date)}
-          {/* {Intl.DateTimeFormat("en-US", {
-            weekday: "long",
-            year: "numeric",
           }).format(date)} */}
-          <span>{length} min read</span>
-        </p>
+        <span>{moment(date).format("dddd Do, YYYY")}</span>
+        <span>{length} min read</span>
         <p>{snippet}</p>
       </div>
     </article>

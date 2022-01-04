@@ -3,15 +3,28 @@ import data from "./data";
 import Article from "./Article";
 
 function App() {
-  const handleDarkMode = () => {
-    console.log("dark");
+  const [theme, setTheme] = useState("light-theme");
+  const toggleTheme = () => {
+    if (theme === "light-theme") {
+      console.log("dark");
+      setTheme("dark-theme");
+    } else {
+      console.log("light");
+      setTheme("light-theme");
+    }
   };
+
+  useEffect(() => {
+    console.log(document.documentElement.className);
+    document.documentElement.className = theme;
+  }, [theme]);
+
   return (
-    <main className='dark-theme'>
+    <main>
       <nav>
         <div className='nav-center'>
           <h1>Overreacted</h1>
-          <button className='btn' onClick={handleDarkMode}>
+          <button className='btn' onClick={toggleTheme}>
             Toggle
           </button>
         </div>

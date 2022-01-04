@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaTemperatureLow } from "react-icons/fa";
 import Photo from "./Photo";
 const clientID = `?client_id=${process.env.REACT_APP_ACCESS_KEY}`;
 const mainUrl = `https://api.unsplash.com/photos/`;
@@ -11,9 +11,22 @@ const observerOptions = {
   threshold: 1,
 };
 
+//todo REFACTOR
+/**
+ * remove current scroll code
+ * set default page to 1
+ * & page = 0 will create duplicate images
+ * setup two useEffects
+ * don't run second on initial render
+ * check for query value
+ * if page 1 fetch images
+ * otherwise setPage(1)
+ * fix scroll functionality
+ */
+
 function App() {
   // const [photosPerPage, setPhotosPerPage] = useState(10);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   console.log("🚀TCL: ~ file: App.js ~ line 18 ~ App ~ page", page);
   // const [url, setUrl] = useState(
   //   `${mainUrl}${clientID}&per_page=${photosPerPage}`
@@ -21,8 +34,11 @@ function App() {
   const [searchQuery, setSearchQuery] = useState("");
   // const { loading, data: photoData } = useFetch(url);
   const [photos, setPhotos] = useState([]);
+  console.log("🚀TCL: ~ file: App.js ~ line 37 ~ App ~ photos", photos);
   const [loading, setLoading] = useState(false);
+  const [newImages, setNewImages] = useState(false);
   const photosRef = useRef(null);
+  const mounted = useRef(false);
 
   const fetchPhotos = async () => {
     let url;
@@ -38,10 +54,10 @@ function App() {
       const response = await fetch(url);
       const photoData = await response.json();
 
-      let newPhotos;
+      let newPhotos = [];
       // if (searchQuery && page === 1) {
-      // console.log("searchQuery && page === 1", photoData.results);
-      // return photoData.results;
+      //   console.log("searchQuery && page === 1", photoData.results);
+      //   return photoData.results;
       // } else
       if (searchQuery) {
         console.log("searchQuery");
@@ -51,7 +67,7 @@ function App() {
             results.map((photo) => {
               const {
                 id,
-                urls: { full: image },
+                urls: { regular: image },
                 alt_description: desc,
                 likes,
                 user: {
@@ -77,7 +93,7 @@ function App() {
         newPhotos = photoData.map((photo) => {
           const {
             id,
-            urls: { full: image },
+            urls: { regular: image },
             alt_description: desc,
             likes,
             user: {
@@ -106,55 +122,73 @@ function App() {
         setPhotos((oldPhotos) => [...oldPhotos, ...newPhotos]);
       }
       setLoading(false);
+      setNewImages(false);
     } catch (error) {
       console.log(error);
       setLoading(false);
+      setNewImages(false);
     }
   };
 
   //TODO: infinite scroll: METHOD 1: using scroll event
   //& add -2px for trigger load images sooner
-  // useEffect(() => {
-  //   const event = window.addEventListener("scroll", () => {
-  //     if (
-  //       !loading &&
-  //       window.innerHeight + window.scrollY >= document.body.scrollHeight - 2
-  //     ) {
-  //       console.log("it worked");
-  //       setPage((oldPage) => oldPage + 1);
-  //       // setPage(page + 1);
-  //     }
-  //     // console.log(`innerHeight: ${window.innerHeight}`);
-  //     // console.log(`scrollY: ${window.scrollY}`);
-  //     // console.log(`body height: ${document.body.scrollHeight}`);
-  //   });
-  //   return () => window.removeEventListener("scroll", event);
-  //   // eslint-disable-next-line
-  // }, []);
+  useEffect(() => {
+    const event = window.addEventListener("scroll", () => {
+      if (
+        window.innerHeight + window.scrollY >=
+        document.body.scrollHeight - 2
+      ) {
+        console.log("it worked");
+        // setPage((oldPage) => oldPage + 1);
+        // setPage(page + 1);
+        setNewImages(true);
+      }
+      // console.log(`innerHeight: ${window.innerHeight}`);
+      // console.log(`scrollY: ${window.scrollY}`);
+      // console.log(`body height: ${document.body.scrollHeight}`);
+    });
+    return () => window.removeEventListener("scroll", event);
+    // eslint-disable-next-line
+  }, []);
   //TODO end METHOD 1: using scroll event
 
-  //TODO: infinite scroll: METHOD 2: using intersection observer
+  //TODO: infinite scroll: METHOD 2: using "intersection observer" to setNewImages to true if isIntersection === TRUE
   // load when scroll to bottom
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      // console.log(entries[0]);
+  // useEffect(() => {
+  //   console.log("second");
+  //   // if (loading || !newImages) return;
+  //   const observer = new IntersectionObserver((entries) => {
+  //     // console.log(entries[0]);
 
-      if (entries[0].isIntersecting) {
-        //do your actions here
-        // setPhotosPerPage(photosPerPage + 10);
-        // searchQuery ? fetchPhotosWithSearch(url) : fetchPhotos(url);
-        // console.log("It works!");
-        setPage((oldPage) => oldPage + 1);
-      }
-      // else {
-      //   console.log("cuoc song ma");
-      // }
-    }, observerOptions);
-    if (photosRef.current) {
-      observer.observe(photosRef.current);
+  //     if (!loading && entries[0].isIntersecting) {
+  //       //do your actions here
+  //       // setPhotosPerPage(photosPerPage + 10);
+  //       // searchQuery ? fetchPhotosWithSearch(url) : fetchPhotos(url);
+  //       console.log("It works!");
+  //       // setPage((oldPage) => oldPage + 1);
+  //       setNewImages(true);
+  //     }
+  //     // else {
+  //     //   console.log("cuoc song ma");
+  //     // }
+  //   }, observerOptions);
+  //   if (photosRef.current) {
+  //     observer.observe(photosRef.current);
+  //   }
+  // }, []);
+  //TODO: END METHOD 2: fetch image based on newImages state
+  useEffect(() => {
+    // if first time render -> return
+    // avoid isIntersection === TRUE because of not yet getting data
+    if (!mounted.current) {
+      mounted.current = true;
+      return;
     }
-  }, []);
-  //TODO: END METHOD 2: using intersection observer
+    if (loading || !newImages) return;
+    setPage((oldPage) => oldPage + 1);
+  }, [newImages]);
+
+  //TODO: watch first time render or second time render
 
   useEffect(() => {
     fetchPhotos();
@@ -162,7 +196,13 @@ function App() {
   }, [page]);
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!searchQuery) return;
+    if (page === 1) {
+      fetchPhotos();
+      return;
+    }
     setPage(1);
+
     // fetchPhotos();
   };
 

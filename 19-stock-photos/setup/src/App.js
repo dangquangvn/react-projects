@@ -14,16 +14,32 @@ function App() {
   const loadingRef = useRef();
   const mounted = useRef(false);
   const [newImages, setNewImages] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const fetchPhotos = async () => {
     setLoading(true);
     const pageUrl = `&page=${page}&per_page=9`;
-    let url = `${mainUrl}${clientID}${pageUrl}`;
+    const queryUrl = `&query=${searchQuery}`;
+    let url;
+    if (searchQuery) {
+      url = `${searchUrl}${clientID}${pageUrl}${queryUrl}`;
+    } else {
+      url = `${mainUrl}${clientID}${pageUrl}`;
+    }
     try {
-      console.log(url);
+      // console.log(url);
       const response = await fetch(url);
       const data = await response.json();
-      setPhotos((oldPhotos) => [...oldPhotos, ...data]);
+      console.log("🚀TCL: ~ file: App.js ~ line 32 ~ fetchPhotos ~ data", data);
+      setPhotos((oldPhotos) => {
+        if (searchQuery && page === 1) {
+          return data.results;
+        } else if (searchQuery) {
+          return [...oldPhotos, ...data.results];
+        } else {
+          return [...oldPhotos, ...data];
+        }
+      });
     } catch (error) {
       console.log(error);
     }
@@ -37,12 +53,9 @@ function App() {
 
   //TODO: method 1: using intersection observer
   useEffect(() => {
-    console.log("second");
     const observer = new IntersectionObserver(
       (entries) => {
         if (!loading && entries[0].isIntersecting) {
-          console.log("loading in entry", loading);
-          // console.log("🚀TCL: ~ file: App.js ~ line 13 ~ App ~ page", page);
           // setPage((oldPage) => oldPage + 1);
           setNewImages(true);
         }
@@ -68,7 +81,6 @@ function App() {
   useEffect(() => {
     //& if first time render, DO NOT trigger setPage
     if (!mounted.current) {
-      console.log("first");
       mounted.current = true;
       return;
     }
@@ -79,12 +91,27 @@ function App() {
     setPage((oldPage) => oldPage + 1);
   }, [newImages]);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!searchQuery) return;
+    if (page === 1) {
+      fetchPhotos();
+    }
+    setPage(1);
+  };
+
   return (
     <main>
       <section className='search'>
         <form action='' className='search-form'>
-          <input type='text' className='form-input' placeholder='Search' />
-          <button type='submit' className='submit-btn'>
+          <input
+            type='text'
+            className='form-input'
+            placeholder='Search'
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <button type='submit' className='submit-btn' onClick={handleSubmit}>
             <FaSearch />
           </button>
         </form>

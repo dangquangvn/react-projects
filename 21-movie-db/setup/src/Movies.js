@@ -5,8 +5,7 @@ const url =
   "https://upload.wikimedia.org/wikipedia/commons/f/fc/No_picture_available.png";
 
 const Movies = (/*{ Poster, Title, Year, imdbID }*/) => {
-  const { movies, loading, searchQuery, setSearchQuery, error } =
-    useGlobalContext();
+  const { movies, loading, error } = useGlobalContext();
   return (
     <section className='movies'>
       {
@@ -15,7 +14,7 @@ const Movies = (/*{ Poster, Title, Year, imdbID }*/) => {
         ) : (
           movies.map(({ Poster, Title, Year, imdbID }) => (
             <Link to={`/movies/${imdbID}`} className='movie' key={imdbID}>
-              <img src={Poster || url} alt={Title} />
+              <img src={Poster === "N/A" ? url : Poster} alt={Title} />
               <div className='movie-info'>
                 <h4>{Title}</h4>
                 <p>{Year}</p>

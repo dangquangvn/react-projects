@@ -1,14 +1,50 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect } from "react";
 // make sure to use https
-export const API_ENDPOINT = `https://www.omdbapi.com/?apikey=${process.env.REACT_APP_MOVIE_API_KEY}`
-const AppContext = React.createContext()
+export const API_ENDPOINT = `https://www.omdbapi.com/?apikey=${process.env.REACT_APP_MOVIE_API_KEY}`;
+console.log("🚀TCL: ~ file: context.js ~ line 4 ~ API_ENDPOINT", API_ENDPOINT);
+const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
-  return <AppContext.Provider value='hello'>{children}</AppContext.Provider>
-}
+  const [loading, setLoading] = useState(false);
+  const [movies, setMovies] = useState([]);
+  const [errorValue, setError] = useState("");
+  // console.log(
+  //   "🚀TCL: ~ file: context.js ~ line 11 ~ AppProvider ~ error",
+  //   errorValue
+  // );
+  const [searchQuery, setSearchQuery] = useState("batman");
+  const fetchMovies = async () => {
+    let searchUrl = `&s=${searchQuery}`;
+    let url = `${API_ENDPOINT}${searchUrl}`;
+    setLoading(true);
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      if (!data.Response) {
+        throw data;
+      }
+      setMovies(data.Search);
+    } catch (error) {
+      console.log("we got error");
+      console.log("error -->", error);
+      setError(error);
+    }
+    setLoading(false);
+  };
+  useEffect(() => {
+    fetchMovies();
+  }, []);
+  return (
+    <AppContext.Provider
+      value={{ movies, loading, searchQuery, setSearchQuery, errorValue }}
+    >
+      {children}
+    </AppContext.Provider>
+  );
+};
 // make sure use
 export const useGlobalContext = () => {
-  return useContext(AppContext)
-}
+  return useContext(AppContext);
+};
 
-export { AppContext, AppProvider }
+export { AppContext, AppProvider };

@@ -5,10 +5,12 @@ import { API_ENDPOINT, useGlobalContext } from "./context";
 const SingleMovie = () => {
   // const { movies, loading, searchQuery, setSearchQuery, errorValue } =
   // useGlobalContext();
+  // const {  error } = useGlobalContext();
 
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
   const [movie, setMovie] = useState({});
+  const [error, setError] = useState({ show: false, msg: "" });
   const fetchSingleMovie = async () => {
     let idUrl = `&i=${id}`;
     let url = `${API_ENDPOINT}${idUrl}`;
@@ -17,11 +19,11 @@ const SingleMovie = () => {
     try {
       const response = await fetch(url);
       const data = await response.json();
-      console.log(
-        "🚀TCL: ~ file: SingleMovie.js ~ line 20 ~ fetchSingleMovie ~ data",
-        data
-      );
-      setMovie(data);
+      if (data.Response === "True") {
+        setMovie(data);
+      } else {
+        setError({ show: true, msg: data.Error });
+      }
     } catch (error) {
       console.log("we got error");
       // console.log("error -->", error);
@@ -33,6 +35,19 @@ const SingleMovie = () => {
     fetchSingleMovie();
   }, []);
   const { Poster, Title, Plot, Year } = movie;
+  if (loading) {
+    return <div className='loading'></div>;
+  }
+  if (error.show) {
+    return (
+      <div className='page-error'>
+        <h1>{error.msg}</h1>
+        <Link to={"/"} className='btn'>
+          back to movies
+        </Link>
+      </div>
+    );
+  }
   return (
     <>
       {loading ? (

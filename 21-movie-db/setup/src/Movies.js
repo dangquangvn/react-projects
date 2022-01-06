@@ -7,12 +7,12 @@ const url =
 const Movies = (/*{ Poster, Title, Year, imdbID }*/) => {
   const { movies, loading, error } = useGlobalContext();
   return (
-    <section className='movies'>
-      {
-        loading ? (
-          <div className='loading'></div>
-        ) : (
-          movies.map(({ Poster, Title, Year, imdbID }) => (
+    <>
+      {loading ? (
+        <div className='loading'></div>
+      ) : (
+        <section className='movies'>
+          {movies.map(({ Poster, Title, Year, imdbID }) => (
             <Link to={`/movies/${imdbID}`} className='movie' key={imdbID}>
               <img src={Poster === "N/A" ? url : Poster} alt={Title} />
               <div className='movie-info'>
@@ -20,11 +20,10 @@ const Movies = (/*{ Poster, Title, Year, imdbID }*/) => {
                 <p>{Year}</p>
               </div>
             </Link>
-          ))
-        )
-        // <h1>Movies.map</h1>
-      }
-    </section>
+          ))}
+        </section>
+      )}
+    </>
   );
 };
 

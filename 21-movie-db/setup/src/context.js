@@ -7,11 +7,11 @@ const AppContext = React.createContext();
 const AppProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [movies, setMovies] = useState([]);
-  const [errorValue, setError] = useState("");
-  // console.log(
-  //   "🚀TCL: ~ file: context.js ~ line 11 ~ AppProvider ~ error",
-  //   errorValue
-  // );
+  const [error, setError] = useState({ show: false, msg: "" });
+  console.log(
+    "🚀TCL: ~ file: context.js ~ line 11 ~ AppProvider ~ error",
+    error
+  );
   const [searchQuery, setSearchQuery] = useState("batman");
   const fetchMovies = async () => {
     let searchUrl = `&s=${searchQuery}`;
@@ -20,23 +20,26 @@ const AppProvider = ({ children }) => {
     try {
       const response = await fetch(url);
       const data = await response.json();
-      if (!data.Response) {
-        throw data;
+      if (data.Response === "True") {
+        setMovies(data.Search);
+        setError({ show: false, msg: "" });
+      } else {
+        setError({ show: true, msg: data.Error });
       }
-      setMovies(data.Search);
     } catch (error) {
-      console.log("we got error");
       console.log("error -->", error);
-      setError(error);
     }
     setLoading(false);
   };
   useEffect(() => {
     fetchMovies();
-  }, []);
+  }, [
+    searchQuery,
+    /*searchQuery*/
+  ]);
   return (
     <AppContext.Provider
-      value={{ movies, loading, searchQuery, setSearchQuery, errorValue }}
+      value={{ movies, loading, searchQuery, setSearchQuery, error }}
     >
       {children}
     </AppContext.Provider>

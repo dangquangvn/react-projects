@@ -55,8 +55,14 @@ const AppProvider = ({ children }) => {
     dispatch({ type: HANDLE_PAGE, payload: { checkPrevBtn } });
   };
 
+  const handleRemove = (id) => {
+    dispatch({ type: REMOVE_STORY, payload: { id } });
+  };
+
   return (
-    <AppContext.Provider value={{ ...state, handleSearchQuery, handlePage }}>
+    <AppContext.Provider
+      value={{ ...state, handleSearchQuery, handlePage, handleRemove }}
+    >
       {children}
     </AppContext.Provider>
   );

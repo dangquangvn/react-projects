@@ -45,6 +45,16 @@ const reducer = (state, { type, payload }) => {
         ...state,
         page: checkNumber(newPage),
       };
+    case REMOVE_STORY:
+      let newNews = state.news.filter((item) => item.objectID !== payload.id);
+      console.log(
+        "🚀TCL: ~ file: reducer.js ~ line 50 ~ reducer ~ newNews",
+        newNews
+      );
+      return {
+        ...state,
+        news: newNews,
+      };
     default:
       // return state;
       throw new Error(`no matching "${type}" action`);

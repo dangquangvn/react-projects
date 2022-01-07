@@ -23,11 +23,12 @@ const Stories = () => {
             num_comments: comments,
             objectID: id,
             url,
+            story_title,
           }) => (
             <article className='story' key={id}>
-              <h4 className='title'>{title || "N/A"}</h4>
+              <h4 className='title'>{title || story_title}</h4>
               <p className='info'>
-                {points} points by {author} | {comments} comments
+                {points || 0} points by {author} | {comments || 0} comments
               </p>
               <div>
                 <a className='read-link' target='blank' href={url}>

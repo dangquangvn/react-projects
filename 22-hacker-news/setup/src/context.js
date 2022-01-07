@@ -16,13 +16,21 @@ const initialState = {
   news: [],
   isLoading: true,
   error: { show: false, msg: "" },
+  searchQuery: "react",
 };
 
 const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
-  const { data: news, isLoading, error } = useFetch(`${API_ENDPOINT}`);
   const [state, dispatch] = useReducer(reducer, initialState);
+  let searchUrl = state.searchQuery
+    ? `${API_ENDPOINT}&query=${state.searchQuery}`
+    : `${API_ENDPOINT}`;
+  const { data: news, isLoading, error } = useFetch(searchUrl);
+  console.log(
+    "🚀TCL: ~ file: context.js ~ line 26 ~ AppProvider ~ searchUrl",
+    searchUrl
+  );
   useEffect(() => {
     if (isLoading) {
       dispatch({ type: SET_LOADING });
@@ -30,8 +38,13 @@ const AppProvider = ({ children }) => {
       dispatch({ type: SET_STORIES, payload: { news } });
     }
   }, [isLoading]);
+
+  const handleSearchQuery = (value) => {
+    dispatch({ type: HANDLE_SEARCH, payload: { value } });
+  };
+
   return (
-    <AppContext.Provider value={{ news, isLoading, error }}>
+    <AppContext.Provider value={{ ...state, handleSearchQuery }}>
       {children}
     </AppContext.Provider>
   );

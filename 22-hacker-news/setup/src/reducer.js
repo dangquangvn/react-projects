@@ -12,6 +12,13 @@ const reducer = (state, { type, payload }) => {
       return { ...state, isLoading: true };
     case SET_STORIES:
       return { ...state, isLoading: false, news: payload.news };
+    case "THAY_DOI_SEARCH":
+      return { ...state, searchQuery: payload.random };
+    case HANDLE_SEARCH:
+      return {
+        ...state,
+        searchQuery: payload.value,
+      };
     default:
       return state;
   }

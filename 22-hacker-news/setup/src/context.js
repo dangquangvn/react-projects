@@ -26,7 +26,7 @@ const AppProvider = ({ children }) => {
   let searchUrl = state.searchQuery
     ? `${API_ENDPOINT}&query=${state.searchQuery}`
     : `${API_ENDPOINT}`;
-  const { data: news, isLoading, error } = useFetch(searchUrl);
+  const { data: news, isLoading, error } = useFetch(searchUrl, 300);
   console.log(
     "🚀TCL: ~ file: context.js ~ line 26 ~ AppProvider ~ searchUrl",
     searchUrl

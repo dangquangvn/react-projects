@@ -2,10 +2,15 @@
 import React, { useState, useEffect } from "react";
 const API_ENDPOINT = `https://www.omdbapi.com/?apikey=${process.env.REACT_APP_MOVIE_API_KEY}`;
 
-function useFetch(url) {
+function useFetch(url, timeout) {
   const [data, setData] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState({ show: false, msg: "" });
+  const [timer, setTimer] = useState(null);
+
+  const clearTimer = () => {
+    if (timer) clearTimeout(timer);
+  };
 
   const fetchData = async (url) => {
     setLoading(true);
@@ -33,7 +38,15 @@ function useFetch(url) {
   };
 
   useEffect(() => {
-    fetchData(url);
+    clearTimer();
+
+    if (url && timeout) {
+      // const newTimer = setTimeout(fetchData(url), timeout);
+      const newTimer = setTimeout(() => fetchData(url), timeout);
+      setTimer(newTimer);
+    } else {
+      fetchData(url);
+    }
   }, [url]);
 
   return { data, isLoading, error };

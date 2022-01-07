@@ -6,6 +6,16 @@ import {
   HANDLE_SEARCH,
 } from "./actions";
 
+const checkNumber = (num) => {
+  if (num < 0) {
+    return 49;
+  }
+  if (num > 49) {
+    return 0;
+  }
+  return num;
+};
+
 const reducer = (state, { type, payload }) => {
   switch (type) {
     case SET_LOADING:
@@ -18,6 +28,17 @@ const reducer = (state, { type, payload }) => {
       return {
         ...state,
         searchQuery: payload.value,
+      };
+    case HANDLE_PAGE:
+      let newPage;
+      if (payload.checkPrevBtn) {
+        newPage = state.page - 1;
+      } else {
+        newPage = state.page + 1;
+      }
+      return {
+        ...state,
+        page: checkNumber(newPage),
       };
     default:
       return state;

@@ -17,15 +17,17 @@ const initialState = {
   isLoading: true,
   error: { show: false, msg: "" },
   searchQuery: "react",
+  page: 0,
 };
 
 const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  let pageUrl = `&page=${state.page}`;
   let searchUrl = state.searchQuery
-    ? `${API_ENDPOINT}&query=${state.searchQuery}`
-    : `${API_ENDPOINT}`;
+    ? `${API_ENDPOINT}&query=${state.searchQuery}${pageUrl}`
+    : `${API_ENDPOINT}${pageUrl}`;
   const { data: news, isLoading, error } = useFetch(searchUrl, 300);
   console.log(
     "🚀TCL: ~ file: context.js ~ line 26 ~ AppProvider ~ searchUrl",
@@ -43,8 +45,14 @@ const AppProvider = ({ children }) => {
     dispatch({ type: HANDLE_SEARCH, payload: { value } });
   };
 
+  const handlePage = (e) => {
+    console.log("handlePage", e.target.classList.contains("btn-prev"));
+    const checkPrevBtn = e.target.classList.contains("btn-prev");
+    dispatch({ type: HANDLE_PAGE, payload: { checkPrevBtn } });
+  };
+
   return (
-    <AppContext.Provider value={{ ...state, handleSearchQuery }}>
+    <AppContext.Provider value={{ ...state, handleSearchQuery, handlePage }}>
       {children}
     </AppContext.Provider>
   );

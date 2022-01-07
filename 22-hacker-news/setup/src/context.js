@@ -18,6 +18,7 @@ const initialState = {
   error: { show: false, msg: "" },
   searchQuery: "react",
   page: 0,
+  nbPages: 0,
 };
 
 const AppContext = React.createContext();
@@ -28,7 +29,7 @@ const AppProvider = ({ children }) => {
   let searchUrl = state.searchQuery
     ? `${API_ENDPOINT}&query=${state.searchQuery}${pageUrl}`
     : `${API_ENDPOINT}${pageUrl}`;
-  const { data: news, isLoading, error } = useFetch(searchUrl, 300);
+  const { data, isLoading, error } = useFetch(searchUrl, 300);
   console.log(
     "🚀TCL: ~ file: context.js ~ line 26 ~ AppProvider ~ searchUrl",
     searchUrl
@@ -37,7 +38,10 @@ const AppProvider = ({ children }) => {
     if (isLoading) {
       dispatch({ type: SET_LOADING });
     } else {
-      dispatch({ type: SET_STORIES, payload: { news } });
+      dispatch({
+        type: SET_STORIES,
+        payload: { news: data.hits, nbPages: data.nbPages },
+      });
     }
   }, [isLoading]);
 

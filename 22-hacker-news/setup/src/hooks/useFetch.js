@@ -22,7 +22,7 @@ function useFetch(url, timeout) {
         data
       );
 
-      setData(data.hits);
+      setData(data);
 
       // if (data.Response === "True") {
       //   setData(data.Search || data);

@@ -21,7 +21,12 @@ const reducer = (state, { type, payload }) => {
     case SET_LOADING:
       return { ...state, isLoading: true };
     case SET_STORIES:
-      return { ...state, isLoading: false, news: payload.news };
+      return {
+        ...state,
+        isLoading: false,
+        news: payload.news,
+        nbPages: payload.nbPages,
+      };
     case "THAY_DOI_SEARCH":
       return { ...state, searchQuery: payload.random };
     case HANDLE_SEARCH:
@@ -41,7 +46,8 @@ const reducer = (state, { type, payload }) => {
         page: checkNumber(newPage),
       };
     default:
-      return state;
+      // return state;
+      throw new Error(`no matching "${type}" action`);
   }
 };
 export default reducer;

@@ -5,10 +5,10 @@ const url =
   "https://upload.wikimedia.org/wikipedia/commons/f/fc/No_picture_available.png";
 
 const Movies = (/*{ Poster, Title, Year, imdbID }*/) => {
-  const { movies, loading, error } = useGlobalContext();
+  const { movies, isLoading, error } = useGlobalContext();
   return (
     <>
-      {loading ? (
+      {isLoading ? (
         <div className='loading'></div>
       ) : (
         <section className='movies'>

@@ -50,7 +50,7 @@ const AppProvider = ({ children }) => {
   };
 
   const handlePage = (e) => {
-    console.log("handlePage", e.target.classList.contains("btn-prev"));
+    // console.log("handlePage", e.target.classList.contains("btn-prev"));
     const checkPrevBtn = e.target.classList.contains("btn-prev");
     dispatch({ type: HANDLE_PAGE, payload: { checkPrevBtn } });
   };

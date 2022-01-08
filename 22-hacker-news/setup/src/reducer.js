@@ -6,12 +6,12 @@ import {
   HANDLE_SEARCH,
 } from "./actions";
 
-const checkNumber = (num) => {
-  if (num < 0) {
-    return 49;
+const checkNumber = (num, min, max) => {
+  if (num < min) {
+    return max - 1;
   }
-  if (num > 49) {
-    return 0;
+  if (num > max - 1) {
+    return min;
   }
   return num;
 };
@@ -43,7 +43,7 @@ const reducer = (state, { type, payload }) => {
       }
       return {
         ...state,
-        page: checkNumber(newPage),
+        page: checkNumber(newPage, 0, state.nbPages),
       };
     case REMOVE_STORY:
       let newNews = state.news.filter((item) => item.objectID !== payload.id);

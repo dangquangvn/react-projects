@@ -2,8 +2,14 @@ import React from "react";
 import { useGlobalContext } from "./context";
 
 const SetupForm = () => {
-  const { numQuestions, category, difficulty, handleChange, handleSubmit } =
-    useGlobalContext();
+  const {
+    numQuestions,
+    category,
+    difficulty,
+    handleChange,
+    handleSubmit,
+    error,
+  } = useGlobalContext();
   return (
     <div className='quiz quiz-small'>
       <div className='container'>
@@ -58,6 +64,7 @@ const SetupForm = () => {
             Start
           </button>
         </form>
+        {error.show && <div className='error'>{error.msg}</div>}
       </div>
     </div>
   );

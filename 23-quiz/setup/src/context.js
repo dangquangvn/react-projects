@@ -24,6 +24,11 @@ const CATEGORY_NAME = {
   HISTORY: "history",
   POLITICS: "politics",
 };
+const CATEGORY_ID_V2 = {
+  sports: 21,
+  history: 23,
+  politics: 24,
+};
 
 const checkCategory = (category) => {
   switch (category) {
@@ -49,7 +54,7 @@ const AppProvider = ({ children }) => {
   //& input for setup form
   const [input, setInput] = useState({
     numQuestions: 10,
-    category: CATEGORY_ID.SPORTS,
+    category: CATEGORY_NAME.SPORTS,
     difficulty: "easy",
   });
   //& store data
@@ -66,7 +71,8 @@ const AppProvider = ({ children }) => {
   const [isModalOpen, setModalOpen] = useState(false);
 
   let urlNumQuestion = `amount=${input.numQuestions}`;
-  let urlCategory = `&category=${checkCategory(input.category)}`;
+  // let urlCategory = `&category=${checkCategory(input.category)}`;
+  let urlCategory = `&category=${CATEGORY_ID_V2[input.category]}`;
   let urlDifficulty = `&difficulty=${input.difficulty}`;
   let url = `${API_ENDPOINT}${urlNumQuestion}${urlCategory}${urlDifficulty}&type=multiple`;
   // let quiz, isLoading, error;

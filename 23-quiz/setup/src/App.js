@@ -31,8 +31,19 @@ function App() {
   const { question, incorrect_answers, correct_answer } = quiz[index];
   let allAnswers = [];
   if (incorrect_answers) {
-    allAnswers = [...incorrect_answers, correct_answer];
+    //= method 1: use shuffle function
+    // allAnswers = [...incorrect_answers, correct_answer];
     // allAnswers = shuffle(allAnswers);
+    //= method 2:
+    allAnswers = [...incorrect_answers];
+    const tempIndex = Math.floor(Math.random() * 4);
+    console.log("🚀TCL: ~ file: App.js ~ line 40 ~ App ~ tempIndex", tempIndex);
+    if (tempIndex === 3) {
+      allAnswers.push(correct_answer);
+    } else {
+      allAnswers.push(allAnswers[tempIndex]);
+      allAnswers[tempIndex] = correct_answer;
+    }
   }
 
   return (

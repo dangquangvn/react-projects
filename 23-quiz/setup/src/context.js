@@ -54,10 +54,17 @@ const AppProvider = ({ children }) => {
   });
   //& store data
   const [quiz, setQuiz] = useState([]);
+  const [index, setIndex] = useState(0);
+  const [correct, setCorrect] = useState(0);
+  console.log("🚀TCL: ~ file: context.js ~ line 57 ~ AppProvider ~ quiz", quiz);
   const [isLoading, setLoading] = useState(false);
   const [error, setError] = useState({ show: false, msg: "" });
 
   const [isWaiting, setWaiting] = useState(true);
+
+  //= setup modal
+  const [isModalOpen, setModalOpen] = useState(false);
+
   let urlNumQuestion = `amount=${input.numQuestions}`;
   let urlCategory = `&category=${checkCategory(input.category)}`;
   let urlDifficulty = `&difficulty=${input.difficulty}`;
@@ -73,7 +80,9 @@ const AppProvider = ({ children }) => {
         setQuiz(data.results);
         setError({ show: false, msg: "" });
         setWaiting(false);
+        // setIndex(data.results.length);
       } else {
+        // setIndex(0);
         setError({ show: true, msg: "cannot fetch" });
         setWaiting(true);
       }
@@ -82,8 +91,6 @@ const AppProvider = ({ children }) => {
     }
     setLoading(false);
   };
-
-  console.log("🚀TCL: ~ file: context.js ~ line 24 ~ AppProvider ~ data", quiz);
 
   // const { numQuestions, category, difficulty } = input;
 
@@ -98,6 +105,20 @@ const AppProvider = ({ children }) => {
     fetchQuestions(url);
   };
 
+  const handleNextQuiz = () => {
+    setIndex((index) => {
+      if (index >= input.numQuestions - 1) {
+        setModalOpen(true);
+        return input.numQuestions - 1;
+      }
+      return index + 1;
+    });
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -105,9 +126,14 @@ const AppProvider = ({ children }) => {
         quiz,
         handleChange,
         handleSubmit,
+        handleNextQuiz,
+        handleCloseModal,
         isLoading,
         error,
         isWaiting,
+        index,
+        correct,
+        isModalOpen,
       }}
     >
       {children}

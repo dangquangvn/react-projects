@@ -110,14 +110,16 @@ const AppProvider = ({ children }) => {
       if (index >= input.numQuestions - 1) {
         // setCorrect(0)
         setModalOpen(true);
-        // return input.numQuestions - 1;
-        return 0;
+        return input.numQuestions - 1;
+        // return 0;
       }
       return index + 1;
     });
   };
 
   const handleCloseModal = () => {
+    setWaiting(true);
+    setCorrect(0);
     setModalOpen(false);
   };
 

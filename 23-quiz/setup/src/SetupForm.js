@@ -23,6 +23,8 @@ const SetupForm = () => {
               id='numQuestions'
               className='form-input'
               value={numQuestions}
+              min={1}
+              max={50}
               onChange={handleChange}
             />
           </div>

@@ -83,7 +83,10 @@ const AppProvider = ({ children }) => {
         // setIndex(data.results.length);
       } else {
         // setIndex(0);
-        setError({ show: true, msg: "cannot fetch" });
+        setError({
+          show: true,
+          msg: "cannot generate questions, please try different options",
+        });
         setWaiting(true);
       }
     } catch (error) {

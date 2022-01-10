@@ -4,6 +4,7 @@ import { useGlobalContext } from "./context";
 import SetupForm from "./SetupForm";
 import Loading from "./Loading";
 import Modal from "./Modal";
+import { shuffle } from "./utils";
 function App() {
   const {
     isLoading,
@@ -14,11 +15,11 @@ function App() {
     handleNextQuiz,
     isModalOpen,
   } = useGlobalContext();
-  const { question, incorrect_answers, correct_answer } = quiz[0] || {};
-  let allAnswers;
-  if (incorrect_answers) {
-    allAnswers = [...incorrect_answers, correct_answer];
-  }
+  // const { question, incorrect_answers, correct_answer } = quiz[0] || {};
+  // let allAnswers;
+  // if (incorrect_answers) {
+  //   allAnswers = [...incorrect_answers, correct_answer];
+  // }
   if (isWaiting) {
     return <SetupForm />;
   }
@@ -28,15 +29,17 @@ function App() {
   return (
     <main>
       <section className='quiz'>
-        <p className='correct-answers'>Correct Answer: 0/0</p>
+        <p className='correct-answers'>Correct Answer: 0/{index}</p>
         <article className='container'>
           {quiz.map(
             (
               { question, incorrect_answers, correct_answer },
               currentQuestion
             ) => {
+              let allAnswers = [];
               if (incorrect_answers) {
                 allAnswers = [...incorrect_answers, correct_answer];
+                allAnswers = shuffle(allAnswers);
               }
               if (currentQuestion === index) {
                 return (
@@ -44,7 +47,8 @@ function App() {
                     <h3>
                       current: {currentQuestion} vs index: {index}
                     </h3>
-                    <h2>{question}</h2>
+                    <h2 dangerouslySetInnerHTML={{ __html: question }} />
+                    {/* <h2>{question}</h2> */}
                     {allAnswers.length &&
                       allAnswers.map((answer, index) => (
                         <button className='answer-btn' key={index}>

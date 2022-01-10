@@ -14,6 +14,7 @@ function App() {
     correct,
     handleNextQuiz,
     isModalOpen,
+    checkAnswer,
   } = useGlobalContext();
   // const { question, incorrect_answers, correct_answer } = quiz[0] || {};
   // let allAnswers;
@@ -26,41 +27,36 @@ function App() {
   if (isLoading) {
     return <Loading />;
   }
+
+  const { question, incorrect_answers, correct_answer } = quiz[index];
+  let allAnswers = [];
+  if (incorrect_answers) {
+    allAnswers = [...incorrect_answers, correct_answer];
+    // allAnswers = shuffle(allAnswers);
+  }
+
   return (
     <main>
       <section className='quiz'>
-        <p className='correct-answers'>Correct Answer: 0/{index}</p>
+        <p className='correct-answers'>
+          Correct Answer: {correct}/{index}
+        </p>
         <article className='container'>
-          {quiz.map(
-            (
-              { question, incorrect_answers, correct_answer },
-              currentQuestion
-            ) => {
-              let allAnswers = [];
-              if (incorrect_answers) {
-                allAnswers = [...incorrect_answers, correct_answer];
-                allAnswers = shuffle(allAnswers);
-              }
-              if (currentQuestion === index) {
-                return (
-                  <div key={currentQuestion}>
-                    <h3>
-                      current: {currentQuestion} vs index: {index}
-                    </h3>
-                    <h2 dangerouslySetInnerHTML={{ __html: question }} />
-                    {/* <h2>{question}</h2> */}
-                    {allAnswers.length &&
-                      allAnswers.map((answer, index) => (
-                        <button className='answer-btn' key={index}>
-                          {answer}
-                        </button>
-                      ))}
-                  </div>
-                );
-              }
-              // return <h1>{currentQuestion}</h1>;
-            }
-          )}
+          <h3>
+            current: {correct} vs index: {index}
+          </h3>
+          <h2 dangerouslySetInnerHTML={{ __html: question }} />
+          {/* <h2>{question}</h2> */}
+          {allAnswers.length &&
+            allAnswers.map((answer, index) => (
+              <button
+                className='answer-btn'
+                key={index}
+                onClick={() => checkAnswer(correct_answer === answer)}
+              >
+                {answer}
+              </button>
+            ))}
         </article>
         <button className='next-question' onClick={() => handleNextQuiz()}>
           Next Question

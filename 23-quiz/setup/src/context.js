@@ -108,8 +108,10 @@ const AppProvider = ({ children }) => {
   const handleNextQuiz = () => {
     setIndex((index) => {
       if (index >= input.numQuestions - 1) {
+        // setCorrect(0)
         setModalOpen(true);
-        return input.numQuestions - 1;
+        // return input.numQuestions - 1;
+        return 0;
       }
       return index + 1;
     });
@@ -117,6 +119,13 @@ const AppProvider = ({ children }) => {
 
   const handleCloseModal = () => {
     setModalOpen(false);
+  };
+
+  const checkAnswer = (value) => {
+    if (value) {
+      setCorrect((oldCorrect) => oldCorrect + 1);
+    }
+    handleNextQuiz();
   };
 
   return (
@@ -134,6 +143,7 @@ const AppProvider = ({ children }) => {
         index,
         correct,
         isModalOpen,
+        checkAnswer,
       }}
     >
       {children}

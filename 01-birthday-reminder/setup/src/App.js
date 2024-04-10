@@ -1,8 +1,22 @@
-import React, { useState } from 'react';
-import data from './data';
-import List from './List';
+import React, { useState } from "react";
+import data from "./data";
+import List from "./List";
 function App() {
-  return <h2>reminder project setup</h2>;
+  const [listData, setListData] = useState(data);
+  // const [people, setPeople] = useState(data);
+  const clearButton = () => {
+    setListData([]);
+  };
+  return (
+    <main className='section'>
+      <div className='container'>
+        <h3>{listData.length} birthdays today</h3>
+        {listData.map(({ name, age, image }, index) => (
+          <List name={name} age={age} image={image} key={index} />
+        ))}
+        <button onClick={clearButton}>Clear All</button>
+      </div>
+    </main>
+  );
 }
-
 export default App;
